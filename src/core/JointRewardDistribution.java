@@ -95,7 +95,7 @@ public class JointRewardDistribution {
     public void displayDistribution() {
         DecimalFormat df = new DecimalFormat("0.000");
         for (int i = 0; i < n; i++) {
-            if (probability[i] > EPSILON) {
+            if (probability[i] > 0) {
                 for (int j = 0; j < support[i].length; j++) {
                     System.out.print(support[i][j] + "\t");
                 }
@@ -108,10 +108,12 @@ public class JointRewardDistribution {
         DecimalFormat df = new DecimalFormat("0.000");
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < support[i].length; j++) {
-                    bw.write(support[i][j] + "\t");
+                if (probability[i] > 0) {
+                    for (int j = 0; j < support[i].length; j++) {
+                        bw.write(support[i][j] + "\t");
+                    }
+                    bw.write(probability[i] + "\n");
                 }
-                bw.write(probability[i] + "\n");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
