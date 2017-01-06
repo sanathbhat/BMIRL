@@ -38,7 +38,7 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
     public JointRewardDistribution runMonteCarloSampler(Map<Integer, TrajectorySet> demonstrations, int K) {
         //map of seen samples of reward function combinations for each of the m tasks with weights
         HashMap<List<RewardFunction>, Double> weightedSamplesMap = new HashMap<>();
-        HashMap<List<RewardFunction>, Integer> sampleCounts = new HashMap<>();
+        //HashMap<List<RewardFunction>, Integer> sampleCounts = new HashMap<>();
         //start sampling
         for (int k = 0; k < K; k++) {
             WeightedRewardsSet sample = hbmm.getLogWeightedSample(demonstrations);
@@ -48,11 +48,11 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
             //if new sample, add to map
             if(!weightedSamplesMap.containsKey(rhoVector)) {
                 weightedSamplesMap.put(rhoVector, w);
-                sampleCounts.put(rhoVector, 1);
+                //sampleCounts.put(rhoVector, 1);
             }
             else {
                 weightedSamplesMap.put(rhoVector, weightedSamplesMap.get(rhoVector)+w);
-                sampleCounts.put(rhoVector, sampleCounts.get(rhoVector)+1);
+                //sampleCounts.put(rhoVector, sampleCounts.get(rhoVector)+1);
             }
             
             if((double)k/K*100 % 10 == 0) {
@@ -63,11 +63,11 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
         
         int i=0;
         for (List<RewardFunction> rhoVector : weightedSamplesMap.keySet()) {
-            System.out.println(i + ": Weight = "+weightedSamplesMap.get(rhoVector) + " Count = "+sampleCounts.get(rhoVector));
+            System.out.println(i + ": Weight = "+weightedSamplesMap.get(rhoVector)/* + " Count = "+sampleCounts.get(rhoVector)*/);
             i++;
         }
-        System.out.println("Total samples = " + K);
-        System.out.println("Unique samples = " + weightedSamplesMap.size());
+        //System.out.println("Total samples = " + K);
+        //System.out.println("Unique samples = " + weightedSamplesMap.size());
         
         //return a joint reward distribution object representing the above map
         return new JointRewardDistribution(weightedSamplesMap, /*sampleCounts,*/ hbmm.getM());
