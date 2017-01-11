@@ -20,11 +20,12 @@ import mdp.RewardFunction;
  */
 public class JointRewardDistribution {
 
-    private static final double EPSILON = Math.pow(10, -5);
+    private static final double EPSILON = Math.pow(10, -16);
     private final RewardFunction[][] support;
     private final double[] probability;
     private final int n;
 
+    //Standard normalization (exponentiating with the max exponent as the baseline and subtracting it from all exponents)
     JointRewardDistribution(HashMap<List<RewardFunction>, Double> sampleWeightsMap, /*HashMap<List<RewardFunction>, Integer> sampleCounts, */ int m) {
         n = sampleWeightsMap.size();    //the number of discrete support points i.e. x axis values
 
@@ -71,7 +72,8 @@ public class JointRewardDistribution {
 
     }
 
-    /* When sample weights are actual, not log, weights
+    /* 
+    //When sample weights are actual, not log weights
     JointRewardDistribution(HashMap<List<RewardFunction>, Double> sampleWeightsMap, HashMap<List<RewardFunction>, Integer> sampleCounts, int m) {
         int n = sampleWeightsMap.size();    //the number of discrete support points i.e. x axis values
         support = new RewardFunction[n][m];
