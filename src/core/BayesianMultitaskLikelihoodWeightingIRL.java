@@ -19,6 +19,7 @@ import mdp.RewardFunction;
 public class BayesianMultitaskLikelihoodWeightingIRL {
     //private final int K;
     HierarchicalBayesianMultitaskModel hbmm;
+    private String samplesCollectionFile;
     
     /**
      * A BMIRL framework for m tasks
@@ -26,6 +27,24 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
      */
     public BayesianMultitaskLikelihoodWeightingIRL(HierarchicalBayesianMultitaskModel hbmm) {
         this.hbmm = hbmm;
+    }
+    
+    /**
+     * MonteCarlo sampler for BMIRL
+     * @param demonstrations map of TrajectorySet(s) for each task. 
+     * Key is an integer representing a task, value is the corresponding set of trajectories for that task
+     * @param K Number of samples to take for the sampler
+     */
+    public void runMonteCarloSamplerAndWriteToFile(Map<Integer, TrajectorySet> demonstrations, int K) {
+        //start sampling
+        for (int k = 0; k < K; k++) {
+            WeightedSample sample = hbmm.getLogWeightedSample(demonstrations);
+            sample.appendSampleToFile(samplesCollectionFile);
+            
+            if((double)k/K*100 % 10 == 0) {
+                System.out.println(k + " samples done. " + (double)k/K*100 +"% complete");
+            }
+        }
     }
     
     /**
@@ -41,7 +60,7 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
         //HashMap<List<RewardFunction>, Integer> sampleCounts = new HashMap<>();
         //start sampling
         for (int k = 0; k < K; k++) {
-            WeightedRewardsSet sample = hbmm.getLogWeightedSample(demonstrations);
+            WeightedSample sample = hbmm.getLogWeightedSample(demonstrations);
             List<RewardFunction> rhoVector = sample.getRewardSet();
             double w = sample.getLogWeight();
             
@@ -63,7 +82,7 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
         
         int i=0;
         for (List<RewardFunction> rhoVector : weightedSamplesMap.keySet()) {
-            System.out.println(i + ": Weight = "+weightedSamplesMap.get(rhoVector)/* + " Count = "+sampleCounts.get(rhoVector)*/);
+            System.out.println(i + "\t"+weightedSamplesMap.get(rhoVector)/* + " Count = "+sampleCounts.get(rhoVector)*/);
             i++;
         }
         //System.out.println("Total samples = " + K);
@@ -71,6 +90,13 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
         
         //return a joint reward distribution object representing the above map
         return new JointRewardDistribution(weightedSamplesMap, /*sampleCounts,*/ hbmm.getM());
+    }
+
+    /**
+     * @param outputCollectionFile the samplesCollectionFile to set
+     */
+    public void setSamplesCollectionFile(String outputCollectionFile) {
+        this.samplesCollectionFile = outputCollectionFile;
     }
     
 }

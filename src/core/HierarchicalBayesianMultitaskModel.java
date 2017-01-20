@@ -41,7 +41,7 @@ public class HierarchicalBayesianMultitaskModel {
         this.mdp = mdp;
     }
 
-    WeightedRewardsSet getLogWeightedSample(Map<Integer, TrajectorySet> demonstrations) {
+    WeightedSample getLogWeightedSample(Map<Integer, TrajectorySet> demonstrations) {
         //sample beta i.e. the parameter of the Exponential softmax prior over the policy's c parameter
         double beta = softmaxHyperprior.getSample();    //c prior parameter
         ExponentialDistribution exponentialCPrior = new ExponentialDistribution(beta);
@@ -53,12 +53,15 @@ public class HierarchicalBayesianMultitaskModel {
         }
         DirichletDistribution dirichletRewardPrior = new DirichletDistribution(alpha);
         
-        WeightedRewardsSet wrs = new WeightedRewardsSet();
+        WeightedSample wrs = new WeightedSample();
+        wrs.setBeta(beta);
+        wrs.setAlpha(alpha);
         //sample m rewards and policies and compute log likelihood weight
         double logWeight = 0;
         for (int i = 0; i < m; i++) {
             //sample c parameter for softmax policy
             double cI = exponentialCPrior.getSample();
+            wrs.addCParam(cI);
             //sample a reward function and complete the mdp so that Q values can be calculated
             mdp.setRewardFunction(dirichletRewardPrior.getSample());
             SoftMaxPolicy piI = new SoftMaxPolicy(mdp.computeQValues(), cI);
