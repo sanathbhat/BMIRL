@@ -71,5 +71,27 @@ public class RewardFunction {
         }
         return s;
     }
+
+    public void normalize() {
+        double max = Double.NEGATIVE_INFINITY;
+        double min = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < rewardValues.length; i++) {
+            for (int j = 0; j < rewardValues[i].length; j++) {
+                if(rewardValues[i][j]>max) {
+                    max = rewardValues[i][j];
+                }
+                if(rewardValues[i][j]<min) {
+                    min = rewardValues[i][j];
+                }
+            }
+        }
         
+        double maxminDiff = max - min;
+        for (int i = 0; i < rewardValues.length; i++) {
+            for (int j = 0; j < rewardValues[i].length; j++) {
+                rewardValues[i][j] = ((int)((rewardValues[i][j] - min)/maxminDiff * 100))/100.0;
+            }
+        }
+        
+    }
 }

@@ -88,6 +88,10 @@ public class MDP {
         }
     }
     
+    public void normalizeRewardFunction() {
+        R.normalize();
+    }
+    
     public void displayTransitionFunction() {
         DecimalFormat df = new DecimalFormat("0.000");
         System.out.println("(s,a) -> distribution over sPrime");
