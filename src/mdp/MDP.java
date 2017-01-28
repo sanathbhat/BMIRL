@@ -88,8 +88,8 @@ public class MDP {
         }
     }
     
-    public void normalizeRewardFunction() {
-        R.normalize();
+    public void normalizeRewardFunction(double precision) {
+        R.normalize(precision);
     }
     
     public void displayTransitionFunction() {

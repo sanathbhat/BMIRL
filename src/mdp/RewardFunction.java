@@ -72,7 +72,8 @@ public class RewardFunction {
         return s;
     }
 
-    public void normalize() {
+    public void normalize(double precision) {
+        double precisionReciprocal = 1/precision;
         double max = Double.NEGATIVE_INFINITY;
         double min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < rewardValues.length; i++) {
@@ -86,10 +87,10 @@ public class RewardFunction {
             }
         }
         
-        double maxminDiff = max - min;
+        double maxminDiff = (max - min)*precision;
         for (int i = 0; i < rewardValues.length; i++) {
             for (int j = 0; j < rewardValues[i].length; j++) {
-                rewardValues[i][j] = ((int)((rewardValues[i][j] - min)/maxminDiff * 100))/100.0;
+                rewardValues[i][j] = ((int)((rewardValues[i][j] - min)/maxminDiff))/precisionReciprocal;
             }
         }
         
