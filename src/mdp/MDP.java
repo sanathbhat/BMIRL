@@ -134,12 +134,13 @@ public class MDP {
             for (int a = 0; a < nActions; a++) {
                 double sumOverSPrime = 0;
                 for (int sPrime = 0; sPrime < nStates; sPrime++) {
-                    double maxOverAPrime = Double.NEGATIVE_INFINITY;
-                    for (int aPrime = 0; aPrime < nActions; aPrime++) {
-                        if(Q[sPrime][aPrime]>maxOverAPrime)
-                            maxOverAPrime = Q[sPrime][aPrime];
-                    }
-                    sumOverSPrime += T[s][a][sPrime]*maxOverAPrime;
+//                    double maxOverAPrime = Double.NEGATIVE_INFINITY;
+//                    for (int aPrime = 0; aPrime < nActions; aPrime++) {
+//                        if(Q[sPrime][aPrime]>maxOverAPrime)
+//                            maxOverAPrime = Q[sPrime][aPrime];
+//                    }
+//                    sumOverSPrime += T[s][a][sPrime]*maxOverAPrime;
+                      sumOverSPrime += T[s][a][sPrime]*V[sPrime];
                 }                
                 Q[s][a] = R.R(s, a) + gamma*sumOverSPrime;
                 if(Double.isNaN(Q[s][a]))
