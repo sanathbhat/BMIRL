@@ -1,5 +1,5 @@
 *.class
-samples.txt
+build/
 
 # BlueJ files
 *.ctxt
