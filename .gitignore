@@ -1,7 +1,9 @@
 *.class
 build/
-samples.txt
+data/
 nbproject/private/private.xml
+nbproject/project.properties
+output/
 
 # BlueJ files
 *.ctxt

@@ -37,21 +37,21 @@ public class WeightedSample {
     public void appendSampleToFile(String fileName) {
         DecimalFormat doubleFormatter = new DecimalFormat("0.000");
         String line = "";
-        line += doubleFormatter.format(beta) + " ";
+        line += doubleFormatter.format(beta) + " ";             //0
         
         for (int i = 0; i < alpha.length; i++) {
-            line += doubleFormatter.format(alpha[i]) + " ";
+            line += doubleFormatter.format(alpha[i]) + " ";     //1-63
         }
         
         for (Double cI : cParams) {
-            line += doubleFormatter.format(cI) + " ";
+            line += doubleFormatter.format(cI) + " ";           //64-66
         }
         
         for (RewardFunction rewardFunction : rewardSet) {
-            line += rewardFunction + " ";
+            line += rewardFunction + " ";                       //67-69 (csv of 63 values each)
         }
         
-        line += doubleFormatter.format(logWeight) + "\n";
+        line += doubleFormatter.format(logWeight) + "\n";       //70
         
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true))) {
             //if(new java.io.File(fileName).exists())
