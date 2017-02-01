@@ -1,5 +1,4 @@
 *.class
-build/
 data/processed/
 output/
 
