@@ -1,6 +1,6 @@
 *.class
 build/
-data/
+data/processed/
 output/
 
 # BlueJ files
