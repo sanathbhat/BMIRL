@@ -27,7 +27,8 @@ public class BMIRLMain {
         //int nSamples = 1000;    //1K
         //int nSamples = 10000;    //10K
         //int nSamples = 100000;    //100K
-        int nSamples = 1000000;    //1M
+        //int nSamples = 1000000;    //1M
+        int nSamples = 5000000;    //5M
         //int nSamples = 10000000;    //10M!
         //int nSamples = 100000000;    //100M!
         
@@ -40,7 +41,7 @@ public class BMIRLMain {
         HierarchicalBayesianMultitaskModel mirlModel = new HierarchicalBayesianMultitaskModel(1, 1, 3, mdp);
         BayesianMultitaskLikelihoodWeightingIRL irl = new BayesianMultitaskLikelihoodWeightingIRL(mirlModel);
         irl.setSamplesCollectionFile(samplesCollectionFile);
-        irl.runMonteCarloSamplerAndWriteToFile(allTasksTrajectories, nSamples);
+        irl.runMonteCarloSamplerParallelAndWriteToFile(allTasksTrajectories, nSamples);
         //JointRewardDistribution jrd = irl.runMonteCarloSampler(allTasksTrajectories, nSamples);
         
         //jrd.displayDistribution();

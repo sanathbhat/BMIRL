@@ -7,12 +7,12 @@ package main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -24,8 +24,9 @@ public class SamplesProcessorMain {
     static final int NTASKS = 3;
 
     public static void main(String[] args) {
-        String samplesPath = "data/samples.txt";
-        String prunedSamplesPath = "output/prunedsamples/";
+        String samplesPath = "output/samples.txt";
+        String prunedSamplesPath = "output/prunedsamples/" + new SimpleDateFormat("MM.dd.hh.mm").format(new Date()) + "/";
+        new File(prunedSamplesPath).mkdir();
 //        List<double[][]> prunedRewardSets = new ArrayList<>();
 //        List<Double> logWeights = new ArrayList<>();
         HashMap<Double, double[][]> prunedRewardsDistribution = new HashMap<>();
@@ -88,7 +89,7 @@ public class SamplesProcessorMain {
         String formatted = "";
         for (int i = 0; i < NSTATES; i++) {
             for (int j = 0; j < NACTIONS; j++) {
-                formatted += reward[i*NACTIONS + j];
+                formatted += reward[i*NACTIONS + j] + "\t";
             }
             formatted += "\n";
         }
