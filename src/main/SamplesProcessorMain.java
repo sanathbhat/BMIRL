@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @author sanat
  */
 public class SamplesProcessorMain {
-    static final int NSTATES = 9;
+    static final int NSTATES = 154;
     static final int NACTIONS = 7;
     static final int NTASKS = 3;
 
@@ -37,7 +37,7 @@ public class SamplesProcessorMain {
                 String[] sample = line.split(" ");
                 double[][] rewards = new double[NTASKS][NSTATES*NACTIONS];
                 for (int i = 0; i < rewards.length; i++) {
-                    String r[] = sample[67 + i].split(",");
+                    String r[] = sample[1 + NTASKS + NSTATES*NACTIONS + i].split(",");
                     for (int j = 0; j < rewards[i].length; j++) {
                         rewards[i][j] = Double.parseDouble(r[j]);
                     }

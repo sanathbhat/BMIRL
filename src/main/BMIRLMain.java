@@ -24,15 +24,15 @@ public class BMIRLMain {
         String samplesCollectionFile = "output/samples.txt";
         
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};
-        //int nSamples = 1000;    //1K
+        int nSamples = 1000;    //1K
         //int nSamples = 10000;    //10K
         //int nSamples = 100000;    //100K
         //int nSamples = 1000000;    //1M
-        int nSamples = 5000000;    //5M
-        //int nSamples = 10000000;    //10M!
+        //int nSamples = 5000000;    //5M
+//        int nSamples = 10000000;    //10M!
         //int nSamples = 100000000;    //100M!
         
-        CarAMDP mdp = new CarAMDP(9, 7, 0.99, 0.01);        
+        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.01);        
         mdp.loadTransitionFunction(trajectoriesPath, true);
         //mdp.displayTransitionFunction();
         
