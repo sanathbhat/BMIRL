@@ -1,5 +1,6 @@
 *.class
 data/processed/
+data/samples.txt
 output/
 
 # BlueJ files
