@@ -58,7 +58,7 @@ public class SamplesProcessorMain {
         prunedRewardsDistribution.keySet()
                 .stream()
                 .forEach(x -> {
-                    if(x-maxLogWeight>-10000) 
+                    if(x-maxLogWeight>-5000) 
                         writeToFile(prunedSamplesPath, prunedRewardsDistribution.get(x), x);
                 });
         
