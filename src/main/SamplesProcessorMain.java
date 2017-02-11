@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import misc.RewardsCParamsSet;
 
 /**
  *
@@ -24,18 +25,19 @@ public class SamplesProcessorMain {
     static final int NTASKS = 3;
 
     public static void main(String[] args) {
-        String samplesPath = "output/samples.txt";
+        String samplesPath = "data/samples1.txt";
         String prunedSamplesPath = "output/prunedsamples/" + new SimpleDateFormat("MM.dd.hh.mm").format(new Date()) + "/";
         new File(prunedSamplesPath).mkdir();
 //        List<double[][]> prunedRewardSets = new ArrayList<>();
 //        List<Double> logWeights = new ArrayList<>();
-        HashMap<Double, double[][]> prunedRewardsDistribution = new HashMap<>();
+        HashMap<Double, RewardsCParamsSet> prunedRewardsDistribution = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] sample = line.split(" ");
                 double[][] rewards = new double[NTASKS][NSTATES*NACTIONS];
+                double[] cI = new double[]{Double.parseDouble(sample[64]), Double.parseDouble(sample[65]), Double.parseDouble(sample[66])};
                 for (int i = 0; i < rewards.length; i++) {
                     String r[] = sample[1 + NTASKS + NSTATES*NACTIONS + i].split(",");
                     for (int j = 0; j < rewards[i].length; j++) {
@@ -43,7 +45,7 @@ public class SamplesProcessorMain {
                     }
                 }
                 if (isValidDouble(sample[70])) {
-                    prunedRewardsDistribution.put(Double.parseDouble(sample[70]), rewards);
+                    prunedRewardsDistribution.put(Double.parseDouble(sample[70]), new RewardsCParamsSet(rewards, cI));
 //                    prunedRewardSets.add(rewards);
 //                    logWeights.add(Double.parseDouble(sample[70]));
                 }
@@ -57,6 +59,7 @@ public class SamplesProcessorMain {
         
         prunedRewardsDistribution.keySet()
                 .stream()
+                .parallel()
                 .forEach(x -> {
                     if(x-maxLogWeight>-5000) 
                         writeToFile(prunedSamplesPath, prunedRewardsDistribution.get(x), x);
@@ -73,12 +76,16 @@ public class SamplesProcessorMain {
         return true;        
     }
 
-    private static void writeToFile(String prunedSamplesPath, double[][] rewardSet, Double logWeight) {
+    private static void writeToFile(String prunedSamplesPath, double[][] rewardSet, double[] cParams, Double logWeight) {
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(prunedSamplesPath + logWeight + ".txt", true))) {
             for (double[] reward : rewardSet) {
                 bw.append(formatReward(reward) + "\n");
             }
-            bw.append(logWeight+"");
+            
+            bw.append(logWeight+"\n");
+            bw.append(cParams[0]+ "\t");
+            bw.append(cParams[1]+ "\t");
+            bw.append(cParams[2]+ "\t");
             
         } catch (Exception e) {
             e.printStackTrace();
