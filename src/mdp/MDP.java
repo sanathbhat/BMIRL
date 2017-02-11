@@ -134,12 +134,6 @@ public class MDP {
             for (int a = 0; a < nActions; a++) {
                 double sumOverSPrime = 0;
                 for (int sPrime = 0; sPrime < nStates; sPrime++) {
-//                    double maxOverAPrime = Double.NEGATIVE_INFINITY;
-//                    for (int aPrime = 0; aPrime < nActions; aPrime++) {
-//                        if(Q[sPrime][aPrime]>maxOverAPrime)
-//                            maxOverAPrime = Q[sPrime][aPrime];
-//                    }
-//                    sumOverSPrime += T[s][a][sPrime]*maxOverAPrime;
                       sumOverSPrime += T[s][a][sPrime]*V[sPrime];
                 }                
                 Q[s][a] = R.R(s, a) + gamma*sumOverSPrime;
@@ -190,6 +184,26 @@ public class MDP {
             if(LOGGER_ON)
                 System.out.println("Iterations completed="+iterations + "\tDelta = "+ delta);
         }while(delta > epsilon*(1-gamma)/gamma);
+    }
+    
+    public StationaryPolicy computeStationaryPolicy()  {
+        StationaryPolicy policy = new StationaryPolicy(nStates);
+        for (int s = 0; s < nStates; s++) {
+            double maxOverActions = Double.NEGATIVE_INFINITY;
+            int maximizingAction = -1;
+            for (int a = 0; a < nActions; a++) {
+                double sumOverSPrime = 0;
+                for (int sPrime = 0; sPrime < nStates; sPrime++) {
+                    sumOverSPrime += T[s][a][sPrime] * V[sPrime];
+                }
+                if (sumOverSPrime > maxOverActions) {
+                    maxOverActions = sumOverSPrime;
+                    maximizingAction = a;
+                }
+            }
+            policy.setAction(s, maximizingAction);
+        }
+        return policy;
     }
 
     /**

@@ -20,7 +20,7 @@ import misc.RewardsCParamsSet;
  * @author sanat
  */
 public class SamplesProcessorMain {
-    static final int NSTATES = 154;
+    static final int NSTATES = 9;
     static final int NACTIONS = 7;
     static final int NTASKS = 3;
 
@@ -39,7 +39,7 @@ public class SamplesProcessorMain {
                 double[][] rewards = new double[NTASKS][NSTATES*NACTIONS];
                 double[] cI = new double[]{Double.parseDouble(sample[64]), Double.parseDouble(sample[65]), Double.parseDouble(sample[66])};
                 for (int i = 0; i < rewards.length; i++) {
-                    String r[] = sample[1 + NTASKS + NSTATES*NACTIONS + i].split(",");
+                    String r[] = sample[67 + i].split(",");
                     for (int j = 0; j < rewards[i].length; j++) {
                         rewards[i][j] = Double.parseDouble(r[j]);
                     }
@@ -61,8 +61,10 @@ public class SamplesProcessorMain {
                 .stream()
                 .parallel()
                 .forEach(x -> {
-                    if(x-maxLogWeight>-5000) 
-                        writeToFile(prunedSamplesPath, prunedRewardsDistribution.get(x), x);
+                    if(x-maxLogWeight>-10000) {
+                        RewardsCParamsSet rcps = prunedRewardsDistribution.get(x);
+                        writeToFile(prunedSamplesPath, rcps.getRewards(), rcps.getcParams(), x);
+                    }
                 });
         
     }

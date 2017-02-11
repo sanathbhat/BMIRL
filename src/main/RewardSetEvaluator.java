@@ -72,7 +72,7 @@ public class RewardSetEvaluator {
         for (int i = 0; i < rewardSet.length; i++) {
             mdp.setRewardFunction(rewardSet[i]);
             mdp.doValueIteration();
-            mdp.computeStationaryPolicy().display();
+            mdp.computeStationaryPolicy().display(); 
             //mdp.normalizeRewardFunction(0.01);
             //SoftMaxPolicy piI = new SoftMaxPolicy(mdp.computeQValues(), cSet[i]);
             //calculatedLogWeight += computeLogLikelihood(allTasksTrajectories.get(i), piI); 
