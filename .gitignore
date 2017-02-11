@@ -1,7 +1,8 @@
 *.class
 data/processed/
-data/samples.txt
+data/*.txt
 output/
+dist/
 
 # BlueJ files
 *.ctxt
