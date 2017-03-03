@@ -63,14 +63,14 @@ public class HierarchicalBayesianMultitaskModel {
             double cI = exponentialCPrior.getSample();
             wrs.addCParam(cI);
             //sample a reward function and complete the mdp so that Q values can be calculated
-            mdp.setRewardFunction(dirichletRewardPrior.getSample());
-            mdp.normalizeRewardFunction(0.01);
+            MDP completeMDP = mdp.setRewardFunction(dirichletRewardPrior.getSample());
+            completeMDP.normalizeRewardFunction(0.01);
             
-            SoftMaxPolicy piI = new SoftMaxPolicy(mdp.computeQValues(), cI);
+            SoftMaxPolicy piI = new SoftMaxPolicy(completeMDP.computeQValues(), cI);
             logWeight += computeLogLikelihood(demonstrations.get(i), piI, cI);
 //            if(Double.isNaN(logWeight))
 //                System.out.println("NaN found!");
-            wrs.addReward(mdp.getRewardFunction());
+            wrs.addReward(completeMDP.getRewardFunction());
         }
         wrs.setLogWeight(logWeight);
 //        if(Double.isNaN(logWeight))

@@ -23,7 +23,8 @@ public class WeightedSample {
     private final List<Double> cParams;
     private final List<RewardFunction> rewardSet;
     private double logWeight;
-
+    static BufferedWriter bw; 
+    
     public WeightedSample() {
         this.cParams = new ArrayList<>();
         this.rewardSet = new ArrayList<>();
@@ -34,28 +35,32 @@ public class WeightedSample {
 //        this.logWeight = weight;
 //    }
     
-    public void appendSampleToFile(String fileName) {
+    public void appendSampleToFile() {
         DecimalFormat doubleFormatter = new DecimalFormat("0.000");
         String line = "";
         line += doubleFormatter.format(beta) + " ";             //0
         
         for (int i = 0; i < alpha.length; i++) {
-            line += doubleFormatter.format(alpha[i]) + " ";     //1-63
+            line += doubleFormatter.format(alpha[i]) + " ";     //1-1078
         }
         
         for (Double cI : cParams) {
-            line += doubleFormatter.format(cI) + " ";           //64-66
+            line += doubleFormatter.format(cI) + " ";           //1079, 1080, 1081
         }
         
         for (RewardFunction rewardFunction : rewardSet) {
-            line += rewardFunction + " ";                       //67-69 (csv of 63 values each)
+            line += rewardFunction + " ";                       //1082, 1083, 1084 (csv of 1078 values each)
         }
         
-        line += doubleFormatter.format(logWeight) + "\n";       //70
+        line += doubleFormatter.format(logWeight) + "\n";       //1085
         
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true))) {
+        try {
             //if(new java.io.File(fileName).exists())
-                bw.append(line);
+            if(!Double.isNaN(logWeight)) {
+                synchronized(bw) {
+                    bw.append(line);
+                }
+            }
             //else
                 //bw.write(line);
         } catch (Exception e) {

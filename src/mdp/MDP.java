@@ -24,7 +24,7 @@ public class MDP {
     /**
      * The reward function of this MDP
      */
-    protected RewardFunction R; 
+    protected final RewardFunction R; 
     private final double gamma;
     /**
      * Error in value iteration
@@ -39,6 +39,41 @@ public class MDP {
         V = new double[nStates];
         this.gamma = gamma;
         this.epsilon = epsilon;
+        R = null;               //since R is null, the mdp created by this constructor will always be a CMP!!!! Critical for isolating the mdps in the different thrreads
+    }
+
+    /**
+     * Creates a new MDP with {S,A,T,gamma, epsilon} from some MDP
+     * @param otherMDP
+     * @param rf 
+     */
+    private MDP(MDP otherMDP, RewardFunction rf) {
+        this.nStates = otherMDP.nStates;
+        this.nActions = otherMDP.nActions;
+        
+        T = new double[otherMDP.T.length][][];
+        for (int i = 0; i < otherMDP.T.length; i++) {
+            T[i] = new double[otherMDP.T[i].length][];
+            for (int j = 0; j < otherMDP.T[i].length; j++) {
+                T[i][j] = new double[otherMDP.T[i][j].length];
+                System.arraycopy(otherMDP.T[i][j], 0, T[i][j], 0, otherMDP.T[i][j].length);
+            }
+        }
+        
+        Q = new double[otherMDP.Q.length][];
+        for (int i = 0; i < otherMDP.Q.length; i++) {
+            Q[i] = new double[otherMDP.Q[i].length];
+            System.arraycopy(otherMDP.Q[i], 0, Q[i], 0, otherMDP.Q[i].length);
+            
+        }
+        
+        V = new double[otherMDP.V.length];
+        System.arraycopy(otherMDP.V, 0, V, 0, otherMDP.V.length);
+        
+        R = rf;
+        
+        this.gamma = otherMDP.gamma;
+        this.epsilon = otherMDP.epsilon;
     }
     
     /**
@@ -108,11 +143,12 @@ public class MDP {
     }
 
     /**
-     * Method that takes in an array of rewards and creates the reward function
+     * Method that takes in an array of rewards and creates the reward function and returns a new MDP with that reward function and other params from this MDP
      * It assumes that the first nActions# entries correspond to the rewards of the first state and so on.
      * @param rewards The array of rewards
+     * @return a new MDP with the newly created reward function and other properties same as this MDP
      */ 
-    public void setRewardFunction(double[] rewards) {
+    public MDP setRewardFunction(double[] rewards) {
         if(rewards.length != nStates*nActions)
             throw new IllegalArgumentException("Parameter array length not appropriate for this mdp. "
                     + "Expected length="+ nStates*nActions + ", actual length="+rewards.length);
@@ -121,7 +157,8 @@ public class MDP {
         for (int i = 0; i < nStates; i++) {
             System.arraycopy(rewards, i*nActions, rewardFunctionValues[i], 0, nActions);
         }
-        R = new RewardFunction(rewardFunctionValues);
+        RewardFunction rf = new RewardFunction(rewardFunctionValues);
+        return new MDP(this, rf);
     }
 
     /**
@@ -158,6 +195,7 @@ public class MDP {
         double[] VPrime = new double[nStates];
         double delta;
         int iterations = 0;
+//        long start = System.currentTimeMillis();
         do {
             delta = 0;
             System.arraycopy(VPrime, 0, V, 0, nStates); //V <- VPrime
@@ -184,6 +222,7 @@ public class MDP {
             if(LOGGER_ON)
                 System.out.println("Iterations completed="+iterations + "\tDelta = "+ delta);
         }while(delta > epsilon*(1-gamma)/gamma);
+//        System.out.println(System.currentTimeMillis()-start);
     }
     
     public StationaryPolicy computeStationaryPolicy()  {

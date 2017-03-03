@@ -5,6 +5,9 @@
  */
 package core;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import misc.TrajectorySet;
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +40,16 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
      * @param K Number of samples to take for the sampler
      */
     public void runMonteCarloSamplerParallelAndWriteToFile(Map<Integer, TrajectorySet> demonstrations, int K) {
+        try {
+            WeightedSample.bw = new BufferedWriter(new FileWriter(samplesCollectionFile, true));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         //start sampling
         IntStream.range(0, K).parallel().forEach( k ->
         {
             WeightedSample sample = hbmm.getLogWeightedSample(demonstrations);
-            sample.appendSampleToFile(samplesCollectionFile);
+            sample.appendSampleToFile();
             
 //            if((double)k/K*100 % 10 == 0) {
 //                System.out.println(k + " sampling threads dispatched. Approximately " + (double)k/K*100 +"% complete");
@@ -59,7 +67,7 @@ public class BayesianMultitaskLikelihoodWeightingIRL {
         //start sampling
         for (int k = 0; k < K; k++) {
             WeightedSample sample = hbmm.getLogWeightedSample(demonstrations);
-            sample.appendSampleToFile(samplesCollectionFile);
+            sample.appendSampleToFile();
 
             if((double)k/K*100 % 10 == 0) {
                 System.out.println(k + " samples done. " + (double)k/K*100 +"% complete");
