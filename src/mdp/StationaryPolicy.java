@@ -20,10 +20,12 @@ public class StationaryPolicy {
         actions[state] = action;
     }
     
-    public void display() {
+    public void display(int statesPerLine) {
         System.out.println("Stationary policy:");
         for (int i = 0; i < actions.length; i++) {
-            System.out.println(i + "->" + actions[i]);
+            System.out.print(/*i + "->" + */actions[i] + "\t");
+            if((i+1)%statesPerLine == 0)
+                System.out.println();
         }
     }
 }

@@ -22,12 +22,26 @@ public class SoftMaxPolicy implements Policy{
         
         for (int s = 0; s < pi.length; s++) {
             double Z = 0;
+            /*Standard way of computing e^xi/(\sum_i(e^xi) */
+//            for (int a = 0; a < pi[s].length; a++) {
+//                Z += Math.exp(c*q[s][a]);
+//            }
+            /*New way based on LogSumExp calculation*/
+            double maxExp = 0;
             for (int a = 0; a < pi[s].length; a++) {
-                Z += Math.exp(c*q[s][a]);
+                double exp = c*q[s][a];
+                if (exp > maxExp) {
+                    maxExp = exp;
+                }
             }
+            
+            for (int a = 0; a < pi[s].length; a++) {
+                Z += Math.exp(c*q[s][a] - maxExp);
+            }
+            
             Z = (Z==0)?1:Z;
             for (int a = 0; a < pi[s].length; a++) {
-                pi[s][a] = Math.exp(c*q[s][a])/Z;
+                pi[s][a] = Math.exp(c*q[s][a]-maxExp)/Z;
 //                if (Double.isNaN(pi[s][a])) {
 //                    System.out.println("Nan found");
 //                }
