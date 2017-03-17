@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import mdp.CarAMDP;
+import mdp.MDP;
 import mdp.SoftMaxPolicy;
 import mdp.StateActionPair;
 import misc.TrajectoriesLoader;
@@ -21,13 +22,18 @@ import misc.TrajectorySet;
  */
 public class RewardSetEvaluator {
 
+    static final int NSTATES = 154;
+    static final int NACTIONS = 7;
+    static final int NTASKS = 3;
+
     public static void main(String[] args) {
-        String rewardSetFilePath = "output/prunedsamples/-1039861.814.txt";
+        String rewardSetFilePath = "output/prunedsamples/-2276008.122.txt";
         String trajectoriesPath = "data/trajectories";
+        String transitionFnPath = "data/transFn2Features";
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};
-        
-        double[][] rewardSet = new double[3][63];
-        double[] cSet = new double[3];
+
+        double[][] rewardSet = new double[NTASKS][NSTATES*NACTIONS];
+        double[] cSet = new double[NTASKS];
         double readLogWeight = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(rewardSetFilePath))) {
             String line;
@@ -39,18 +45,17 @@ public class RewardSetEvaluator {
                     state = 0;
                 } else {
                     String[] currStateRewards = line.split("\t");
-                    if(currStateRewards.length == 1) {
+                    if (currStateRewards.length == 1) {
                         readLogWeight = Double.parseDouble(currStateRewards[0]);
                         continue;
-                    }
-                    else if(currStateRewards.length == 3) {
-                        for (int i = 0; i < 3; i++) {
+                    } else if (currStateRewards.length == NTASKS) {
+                        for (int i = 0; i < NTASKS; i++) {
                             cSet[i] = Double.parseDouble(currStateRewards[i]);
                         }
                         break;
                     }
                     for (int action = 0; action < currStateRewards.length; action++) {
-                        rewardSet[rewardNo][state*7 + action] = Double.parseDouble(currStateRewards[action]);
+                        rewardSet[rewardNo][state * NACTIONS + action] = Double.parseDouble(currStateRewards[action]);
                     }
                     state++;
                 }
@@ -59,23 +64,24 @@ public class RewardSetEvaluator {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
-        CarAMDP mdp = new CarAMDP(9, 7, 0.99, 0.01);        
-        mdp.loadTransitionFunction(trajectoriesPath, true);
+
+        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.01);
+        //mdp.loadTransitionFunction(trajectoriesPath, true);
+        mdp.loadTransitionFunctionFromFile(transitionFnPath);
 
         double calculatedLogWeight = 0;
         HashMap<Integer, TrajectorySet> allTasksTrajectories = new TrajectoriesLoader(trajectoryBoundaries).loadTrajectories(trajectoriesPath);
         for (int i = 0; i < rewardSet.length; i++) {
-            mdp.setRewardFunction(rewardSet[i]);
-            mdp.doValueIteration();
-            mdp.computeStationaryPolicy().display(); 
+            MDP newMDP = mdp.setRewardFunction(rewardSet[i]);
+            newMDP.doValueIteration();
+            newMDP.computeStationaryPolicy().display(11);
             //mdp.normalizeRewardFunction(0.01);
             //SoftMaxPolicy piI = new SoftMaxPolicy(mdp.computeQValues(), cSet[i]);
             //calculatedLogWeight += computeLogLikelihood(allTasksTrajectories.get(i), piI); 
         }
         //System.out.println(calculatedLogWeight-readLogWeight);
     }
-    
+
     private static double computeLogLikelihood(TrajectorySet tSet, SoftMaxPolicy policy) {
         double logW = 0;
         for (List<StateActionPair> trajectory : tSet) {
