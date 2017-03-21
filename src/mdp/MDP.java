@@ -39,7 +39,7 @@ public class MDP {
         V = new double[nStates];
         this.gamma = gamma;
         this.epsilon = epsilon;
-        R = null;               //since R is null, the mdp created by this constructor will always be a CMP!!!! Critical for isolating the mdps in the different thrreads
+        R = null;               //since R is null, the mdp created by this constructor will always be a CMP(Controlled Markov Process)
     }
 
     /**

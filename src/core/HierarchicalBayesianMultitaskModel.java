@@ -67,7 +67,7 @@ public class HierarchicalBayesianMultitaskModel {
             completeMDP.normalizeRewardFunction(0.01);
             
             SoftMaxPolicy piI = new SoftMaxPolicy(completeMDP.computeQValues(), cI);
-            logWeight += computeLogLikelihood(demonstrations.get(i), piI, cI);
+            logWeight += computeLogLikelihood(demonstrations.get(i), piI);
 //            if(Double.isNaN(logWeight))
 //                System.out.println("NaN found!");
             wrs.addReward(completeMDP.getRewardFunction());
@@ -80,7 +80,7 @@ public class HierarchicalBayesianMultitaskModel {
         return wrs;
     }
     
-    private double computeLogLikelihood(TrajectorySet tSet, SoftMaxPolicy policy, double c) {
+    private double computeLogLikelihood(TrajectorySet tSet, SoftMaxPolicy policy) {
         double logW = 0;
         for (List<StateActionPair> trajectory : tSet) {
             for (StateActionPair sa : trajectory) {
