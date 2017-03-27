@@ -27,7 +27,7 @@ public class RewardSetEvaluator {
     static final int NTASKS = 3;
 
     public static void main(String[] args) {
-        String rewardSetFilePath = "output/prunedsamples/-2276008.122.txt";
+        String rewardSetFilePath = "output/prunedsamples/-2274545.168.txt";
         String trajectoriesPath = "data/trajectories";
         String transitionFnPath = "data/transFn2Features";
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};

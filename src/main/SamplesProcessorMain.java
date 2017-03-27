@@ -28,7 +28,7 @@ public class SamplesProcessorMain {
     static final int CUTOFF = 10000;
 
     public static void main(String[] args) {
-        String samplesPath = "output/samples1M1.txt";
+        String samplesPath = "output/samples.txt";
         String prunedSamplesPath = "output/prunedsamples/" + new SimpleDateFormat("MM.dd.hh.mm").format(new Date()) + "/";
         new File(prunedSamplesPath).mkdir();
 //        List<double[][]> prunedRewardSets = new ArrayList<>();

@@ -26,18 +26,18 @@ public class BMIRLMain {
         
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};
 //        int nSamples = 1000;    //1K
-        //int nSamples = 10000;    //10K
-        int nSamples = 100000;    //100K
-        //int nSamples = 1000000;    //1M
+//        int nSamples = 10000;    //10K
+//        int nSamples = 100000;    //100K
+//        int nSamples = 1000000;    //1M
         //int nSamples = 5000000;    //5M
 //        int nSamples = 10000000;    //10M!
         //int nSamples = 100000000;    //100M!
-        
+        int nSamples  = Integer.parseInt(args[0]);
         CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.01);        
         //mdp.loadTransitionFunction(trajectoriesPath, true);
         mdp.loadTransitionFunctionFromFile(transitionFunctionPath);
         //mdp.displayTransitionFunction();
-        
+        System.out.println("Started BMIRL for " + nSamples + " samples...");
         HashMap<Integer, TrajectorySet> allTasksTrajectories = new TrajectoriesLoader(trajectoryBoundaries).loadTrajectories(trajectoriesPath);
         
         HierarchicalBayesianMultitaskModel mirlModel = new HierarchicalBayesianMultitaskModel(1, 1, 3, mdp);
