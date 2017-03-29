@@ -36,6 +36,7 @@ public class SamplesProcessorMain {
 
         //two passes required as so much cannot be stored in memory
         //Pass 1: find max log weight
+        int linesRead = 0;
         double maxLW = Double.NEGATIVE_INFINITY;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
@@ -47,10 +48,12 @@ public class SamplesProcessorMain {
                         maxLW = currLW;
                     }
                 }
+                linesRead++;
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Expected exception because of incomplete last line");
+            System.out.println("Lines read before AIOOB, pass 1 = " + linesRead);
         } catch (NumberFormatException nex) {
+            System.out.println("Lines read before NFE, pass 1 = " + linesRead);
             nex.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +61,7 @@ public class SamplesProcessorMain {
 
         //Pass 2: Store all reward sets within 'cutoff' difference from max
         HashMap<Double, RewardsCParamsSet> prunedRewardsDistribution = new HashMap<>();
-        int linesRead = 0;
+        linesRead = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -91,10 +94,10 @@ public class SamplesProcessorMain {
                 linesRead++;
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Lines read before failure = " + linesRead);
+            System.out.println("Lines read before AIOOB, pass 2 = " + linesRead);
         } catch (NumberFormatException nex) {
             nex.printStackTrace();
-            System.out.println("Lines read before failure = " + linesRead);
+            System.out.println("Lines read before NFE, pass 2 = " + linesRead);
         } catch (Exception e) {
             e.printStackTrace();
         }
