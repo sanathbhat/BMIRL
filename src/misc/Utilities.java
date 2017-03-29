@@ -11,11 +11,18 @@ package misc;
  */
 public class Utilities {
     public static boolean isValidDouble(String string) {
+        int dpCnt = 0;
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
-            if (!Character.isDigit(c) && c != '.' && c != '-') {
-                return false;
+            if(c == '.') {
+                if(dpCnt==0)
+                    dpCnt++;
+                else
+                    return false;
             }
+            else if (!Character.isDigit(c) && c != '-') {
+                return false;
+            }            
         }
         return true;
     }
