@@ -3,6 +3,7 @@ data/processed/
 data/*.txt
 output/
 dist/
+nbproject/private/private.properties
 
 # BlueJ files
 *.ctxt
