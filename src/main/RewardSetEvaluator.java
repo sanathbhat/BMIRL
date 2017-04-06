@@ -27,7 +27,7 @@ public class RewardSetEvaluator {
     static final int NTASKS = 3;
 
     public static void main(String[] args) {
-        String rewardSetFilePath = "output/prunedsamples/-2274545.168.txt";
+        String rewardSetFilePath = "output/prunedsamples/-1003992.892.txt";
         String trajectoriesPath = "data/trajectories";
         String transitionFnPath = "data/transFn2Features";
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};
@@ -76,10 +76,12 @@ public class RewardSetEvaluator {
             newMDP.doValueIteration();
             newMDP.computeStationaryPolicy().display(11);
             //mdp.normalizeRewardFunction(0.01);
-            //SoftMaxPolicy piI = new SoftMaxPolicy(mdp.computeQValues(), cSet[i]);
-            //calculatedLogWeight += computeLogLikelihood(allTasksTrajectories.get(i), piI); 
+//            SoftMaxPolicy piI = new SoftMaxPolicy(newMDP.computeQValues(), cSet[i]);
+//            calculatedLogWeight += computeLogLikelihood(allTasksTrajectories.get(i), piI); 
         }
-        //System.out.println(calculatedLogWeight-readLogWeight);
+//        System.out.println(calculatedLogWeight);
+//        System.out.println(readLogWeight);
+//        System.out.println(calculatedLogWeight-readLogWeight);
     }
 
     private static double computeLogLikelihood(TrajectorySet tSet, SoftMaxPolicy policy) {

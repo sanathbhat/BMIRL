@@ -34,6 +34,9 @@ public class SamplesProcessorMain {
 //        List<double[][]> prunedRewardSets = new ArrayList<>();
 //        List<Double> logWeights = new ArrayList<>();
 
+//      int lwPos = NSTATES * NACTIONS + 2 * NTASKS + 1;
+        int lwPos = 2 * NTASKS + 2;
+        
         //two passes required as so much cannot be stored in memory
         //Pass 1: find max log weight
         int linesRead = 0;
@@ -42,8 +45,8 @@ public class SamplesProcessorMain {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] sample = line.split(" ");
-                if (Utilities.isValidDouble(sample[NSTATES * NACTIONS + 2 * NTASKS + 1])) {
-                    double currLW = Double.parseDouble(sample[NSTATES * NACTIONS + 2 * NTASKS + 1]);
+                if (Utilities.isValidDouble(sample[lwPos])) {
+                    double currLW = Double.parseDouble(sample[lwPos]);
                     if (currLW > maxLW) {
                         maxLW = currLW;
                     }
@@ -66,10 +69,11 @@ public class SamplesProcessorMain {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] sample = line.split(" ");
-                if (Utilities.isValidDouble(sample[NSTATES * NACTIONS + 2 * NTASKS + 1])) {
-                    double currLW = Double.parseDouble(sample[NSTATES * NACTIONS + 2 * NTASKS + 1]);
+                if (Utilities.isValidDouble(sample[lwPos])) {
+                    double currLW = Double.parseDouble(sample[lwPos]);
                     if (maxLW - currLW < CUTOFF) {
-                        int cursor = NSTATES * NACTIONS + 1;
+                        //int cursor = NSTATES * NACTIONS + 1;
+                        int cursor = 2;
                         double[][] rewards = new double[NTASKS][NSTATES * NACTIONS];
                         double[] cI = new double[NTASKS];
                         for (int i = 0; i < NTASKS; i++) {
