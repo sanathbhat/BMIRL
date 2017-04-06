@@ -59,8 +59,9 @@ public class TrajectoriesLoader {
                             m++;
                             if(m==trajectoryBoundaries.length)      //trajectories from m tasks have been read
                                 break;
-                        }                                                  
-                        currentTrajectory.add(new StateActionPair(s, a));                        
+                        }
+                        if(m%10==0)         //load every 10th (s,a) pair
+                            currentTrajectory.add(new StateActionPair(s, a));                        
                     }
                     //if currentTrajectory still holds the last read task's trajectory, add it to its trajectory set
                     if(m<trajectoryBoundaries.length && currentTrajectory.size() >0) {
