@@ -11,6 +11,7 @@ import mdp.MDP;
 import mdp.SoftMaxPolicy;
 import mdp.StateActionPair;
 import misc.TrajectorySet;
+import stats.BiasedRewardPrior;
 import stats.DirichletDistribution;
 import stats.Distribution;
 import stats.ExponentialDistribution;
@@ -47,11 +48,15 @@ public class HierarchicalBayesianMultitaskModel {
         ExponentialDistribution exponentialCPrior = new ExponentialDistribution(beta);
         
         //sample alphaVector i.e. the parameter set for the Dirichlet reward prior
-        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
-        for (int i = 0; i < alpha.length; i++) {
-            alpha[i] = rewardHyperprior.getSample();
-        }
-        DirichletDistribution dirichletRewardPrior = new DirichletDistribution(alpha);
+//        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
+//        for (int i = 0; i < alpha.length; i++) {
+//            alpha[i] = rewardHyperprior.getSample();
+//        }
+//        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
+        
+        //sample biased reward prior parameter
+        double alpha[] = new double[]{rewardHyperprior.getSample() + 1};
+        BiasedRewardPrior rewardPrior = new BiasedRewardPrior(mdp.getnStates(), mdp.getnActions(), alpha[0], 11, 3.3);
         
         WeightedSample wrs = new WeightedSample();
         wrs.setBeta(beta);
@@ -63,8 +68,8 @@ public class HierarchicalBayesianMultitaskModel {
             double cI = exponentialCPrior.getSample();
             wrs.addCParam(cI);
             //sample a reward function and complete the mdp so that Q values can be calculated
-            MDP completeMDP = mdp.setRewardFunction(dirichletRewardPrior.getSample());
-            completeMDP.normalizeRewardFunction(0.01);
+            MDP completeMDP = mdp.setRewardFunction(rewardPrior.getSample());
+//            completeMDP.normalizeRewardFunction(0.01);
             
             SoftMaxPolicy piI = new SoftMaxPolicy(completeMDP.computeQValues(), cI);
             logWeight += computeLogLikelihood(demonstrations.get(i), piI);

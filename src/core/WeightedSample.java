@@ -19,7 +19,7 @@ import mdp.RewardFunction;
  */
 public class WeightedSample {
     private double beta;      //parameter of the softmax prior over the policy's c parameter
-    private double[] alpha;   //the parameter set for the Dirichlet reward prior
+    private double[] alpha;   //the parameter(s) for the reward prior
     private final List<Double> cParams;
     private final List<RewardFunction> rewardSet;
     private double logWeight;
@@ -41,18 +41,18 @@ public class WeightedSample {
         line += doubleFormatter.format(beta) + " ";             //0
         
         for (int i = 0; i < alpha.length; i++) {
-            line += doubleFormatter.format(alpha[i]) + " ";     //1-1078
+            line += doubleFormatter.format(alpha[i]) + " ";     //1-1078    //1
         }
         
         for (Double cI : cParams) {
-            line += doubleFormatter.format(cI) + " ";           //1079, 1080, 1081
+            line += doubleFormatter.format(cI) + " ";           //1079, 1080, 1081      //2, 3, 4
         }
         
         for (RewardFunction rewardFunction : rewardSet) {
-            line += rewardFunction + " ";                       //1082, 1083, 1084 (csv of 1078 values each)
+            line += rewardFunction + " ";                       //1082, 1083, 1084 (csv of 1078 values each)    //5, 6, 7
         }
         
-        line += doubleFormatter.format(logWeight) + "\n";       //1085
+        line += doubleFormatter.format(logWeight) + "\n";       //1085      //8
         
         try {
             //if(new java.io.File(fileName).exists())
