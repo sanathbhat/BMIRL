@@ -48,15 +48,15 @@ public class HierarchicalBayesianMultitaskModel {
         ExponentialDistribution exponentialCPrior = new ExponentialDistribution(beta);
         
         //sample alphaVector i.e. the parameter set for the Dirichlet reward prior
-//        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
-//        for (int i = 0; i < alpha.length; i++) {
-//            alpha[i] = rewardHyperprior.getSample();
-//        }
-//        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
+        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
+        for (int i = 0; i < alpha.length; i++) {
+            alpha[i] = rewardHyperprior.getSample();
+        }
+        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
         
         //sample biased reward prior parameter
-        double alpha[] = new double[]{rewardHyperprior.getSample() + 1};
-        BiasedRewardPrior rewardPrior = new BiasedRewardPrior(mdp.getnStates(), mdp.getnActions(), alpha[0], 11, 3.3);
+        //double alpha[] = new double[]{rewardHyperprior.getSample() + 1};
+        //BiasedRewardPrior rewardPrior = new BiasedRewardPrior(mdp.getnStates(), mdp.getnActions(), alpha[0], 11, 3.3);
         
         WeightedSample wrs = new WeightedSample();
         wrs.setBeta(beta);

@@ -41,8 +41,9 @@ public class WeightedSample {
         line += doubleFormatter.format(beta) + " ";             //0
         
         for (int i = 0; i < alpha.length; i++) {
-            line += doubleFormatter.format(alpha[i]) + " ";     //1-1078    //1
+            line += doubleFormatter.format(alpha[i]) + ",";     //1
         }
+        line += " ";
         
         for (Double cI : cParams) {
             line += doubleFormatter.format(cI) + " ";           //1079, 1080, 1081      //2, 3, 4
