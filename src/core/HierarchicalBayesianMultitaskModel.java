@@ -92,7 +92,7 @@ public class HierarchicalBayesianMultitaskModel {
                 logW += Math.log(policy.pi(sa.getS(), sa.getA()));
             }
         }
-        return logW;
+        return logW/tSet.size();
     }
 
     /**
