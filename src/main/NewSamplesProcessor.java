@@ -26,7 +26,7 @@ public class NewSamplesProcessor {
     static final int CUTOFF = 5;
 
     public static void main(String[] args) {
-        String samplesPath = "output/samples500KAveOverTraj.txt";
+        String samplesPath = "output/samples.txt";
         String prunedSamplesPath = "output/prunedsamples/" + new SimpleDateFormat("MM.dd.hh.mm").format(new Date()) + "/";
         new File(prunedSamplesPath).mkdir();
 //        List<double[][]> prunedRewardSets = new ArrayList<>();
@@ -92,6 +92,7 @@ public class NewSamplesProcessor {
         
         //Pass 3: Compute expected reward
         double expectedRF[][] = new double[NTASKS][NSTATES*NACTIONS];
+        double expectedCI[] = new double[NTASKS];
         linesRead = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
@@ -100,31 +101,24 @@ public class NewSamplesProcessor {
                 if (Utilities.isValidDouble(sample[lwPos])) {
                     double currLW = Double.parseDouble(sample[lwPos]);
                     if (maxLW - currLW < CUTOFF) {
-                        //int cursor = NSTATES * NACTIONS + 1;
-//                        int cursor = 2;
-                        double[][] rewards = new double[NTASKS][NSTATES * NACTIONS];
-//                        double[] cI = new double[NTASKS];
-//                        for (int i = 0; i < NTASKS; i++) {
-//                            cI[i] = Double.parseDouble(sample[cursor++]);
-//                        }
-                        int cursor = 5;
                         double currWeight = Math.exp(currLW-lse);
-                        for (int m = 0; m < rewards.length; m++) {
-                            String taskMReward[] = sample[cursor + m].split(",");
-                            for (int r = 0; r < taskMReward.length; r++) {
-//                                rewards[i][j] = Double.parseDouble(r[j]);
-                                expectedRF[m][r] += (currWeight * Double.parseDouble(taskMReward[r]));
-                            }
+                        /*Expected cI calculation*/
+                        int cursor = 2;
+//                        double[] cI = new double[NTASKS];
+                        for (int m = 0; m < NTASKS; m++) {
+//                            cI[m] = Double.parseDouble(sample[cursor++]);
+                            expectedCI[m] += (currWeight * Double.parseDouble(sample[cursor++]));
                         }
-
-                        //if (isValidDouble(sample[cursor])) {
-                        //prunedRewardsDistribution.put(Double.parseDouble(sample[cursor]), new RewardsCParamsSet(rewards, cI));
-                        //prunedRewardsDistributionList.add(new AbstractMap.SimpleEntry<>(Double.parseDouble(sample[cursor]), new RewardsCParamsSet(rewards, cI)));
-                        //writeToFile(prunedSamplesPath, rewards, cI, Double.parseDouble(sample[cursor]));
                         
-//                    prunedRewardSets.add(rewards);
-//                    logWeights.add(Double.parseDouble(sample[70]));
-                        //}
+                        /*Expected reward calculation*/
+//                        int cursor = 5;
+//                        for (int m = 0; m < NTASKS; m++) {
+//                            String taskMReward[] = sample[cursor + m].split(",");
+//                            for (int r = 0; r < taskMReward.length; r++) {
+////                                rewards[i][j] = Double.parseDouble(r[j]);
+//                                expectedRF[m][r] += (currWeight * Double.parseDouble(taskMReward[r]));
+//                            }
+//                        }
                     }
                 }
 
@@ -139,36 +133,19 @@ public class NewSamplesProcessor {
             e.printStackTrace();
         }
         
+//        for (int m = 0; m < NTASKS; m++) {
+//            for (int s = 0; s < NSTATES; s++) {
+//                for (int a = 0; a < NACTIONS; a++) {
+//                    System.out.print(expectedRF[m][s*NACTIONS+a] + "\t");
+//                }
+//                System.out.println();
+//            }
+//            System.out.println();
+//        }
+        
         for (int m = 0; m < NTASKS; m++) {
-            for (int s = 0; s < NSTATES; s++) {
-                for (int a = 0; a < NACTIONS; a++) {
-                    System.out.print(expectedRF[m][s*NACTIONS+a] + "\t");
-                }
-                System.out.println();
-            }
-            System.out.println();
+            System.out.println(expectedCI[m] + "\t");
         }
-        
-        
-//        double maxLogWeight = prunedRewardsDistribution.keySet().stream().max(Double::compare).get();
-        //System.out.println(maxLogWeight);
-//        prunedRewardsDistribution.keySet()
-//                .stream()
-//                .parallel()
-//                .forEach(x -> {
-//                    //if(x-maxLogWeight>-10000) {
-//                    RewardsCParamsSet rcps = prunedRewardsDistribution.get(x);
-//                    writeToFile(prunedSamplesPath, rcps.getRewards(), rcps.getcParams(), x);
-//                    //}
-//                });
-        
-//        prunedRewardsDistributionList
-//                .stream()
-//                .parallel()
-//                .forEach(x -> {
-//                    RewardsCParamsSet rcps = x.getValue();
-//                    writeToFile(prunedSamplesPath, rcps.getRewards(), rcps.getcParams(), x.getKey());
-//                });
 
     }
 
