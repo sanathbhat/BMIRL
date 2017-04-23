@@ -40,7 +40,7 @@ public class BMIRLMain {
         System.out.println("Started BMIRL for " + nSamples + " samples...");
         HashMap<Integer, TrajectorySet> allTasksTrajectories = new TrajectoriesLoader(trajectoryBoundaries).loadTrajectories(trajectoriesPath);
         
-        HierarchicalBayesianMultitaskModel mirlModel = new HierarchicalBayesianMultitaskModel(0.1, 0.1, 3, mdp);
+        HierarchicalBayesianMultitaskModel mirlModel = new HierarchicalBayesianMultitaskModel(1, 10, 3, mdp);
         BayesianMultitaskLikelihoodWeightingIRL irl = new BayesianMultitaskLikelihoodWeightingIRL(mirlModel);
         irl.setSamplesCollectionFile(samplesCollectionFile);
         irl.runMonteCarloSamplerParallelAndWriteToFile(allTasksTrajectories, nSamples);

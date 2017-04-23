@@ -112,13 +112,13 @@ public class NewSamplesProcessor {
                         
                         /*Expected reward calculation*/
 //                        int cursor = 5;
-//                        for (int m = 0; m < NTASKS; m++) {
-//                            String taskMReward[] = sample[cursor + m].split(",");
-//                            for (int r = 0; r < taskMReward.length; r++) {
-////                                rewards[i][j] = Double.parseDouble(r[j]);
-//                                expectedRF[m][r] += (currWeight * Double.parseDouble(taskMReward[r]));
-//                            }
-//                        }
+                        for (int m = 0; m < NTASKS; m++) {
+                            String taskMReward[] = sample[cursor + m].split(",");
+                            for (int r = 0; r < taskMReward.length; r++) {
+//                                rewards[i][j] = Double.parseDouble(r[j]);
+                                expectedRF[m][r] += (currWeight * Double.parseDouble(taskMReward[r]));
+                            }
+                        }
                     }
                 }
 
@@ -133,18 +133,18 @@ public class NewSamplesProcessor {
             e.printStackTrace();
         }
         
-//        for (int m = 0; m < NTASKS; m++) {
-//            for (int s = 0; s < NSTATES; s++) {
-//                for (int a = 0; a < NACTIONS; a++) {
-//                    System.out.print(expectedRF[m][s*NACTIONS+a] + "\t");
-//                }
-//                System.out.println();
-//            }
-//            System.out.println();
-//        }
+        for (int m = 0; m < NTASKS; m++) {
+            for (int s = 0; s < NSTATES; s++) {
+                for (int a = 0; a < NACTIONS; a++) {
+                    System.out.print(expectedRF[m][s*NACTIONS+a] + "\t");
+                }
+                System.out.println();
+            }
+            System.out.println();
+        }
         
         for (int m = 0; m < NTASKS; m++) {
-            System.out.println(expectedCI[m] + "\t");
+            System.out.print(expectedCI[m] + "\t");
         }
 
     }
