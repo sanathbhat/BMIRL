@@ -71,7 +71,7 @@ public class HierarchicalBayesianMultitaskModel {
             wrs.addCParam(cI);
             //sample a reward function and complete the mdp so that Q values can be calculated
             MDP completeMDP = mdp.setRewardFunction(rewardPrior.getSample());
-//            completeMDP.normalizeRewardFunction(0.01);
+            completeMDP.normalizeRewardFunction(0.01);
             
             SoftMaxPolicy piI = new SoftMaxPolicy(completeMDP.computeQValues(), cI);
             logWeight += computeLogLikelihood(demonstrations.get(i), piI);
