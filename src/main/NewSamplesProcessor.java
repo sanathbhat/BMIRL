@@ -23,12 +23,13 @@ public class NewSamplesProcessor {
     static final int NSTATES = 154;
     static final int NACTIONS = 7;
     static final int NTASKS = 3;
-    static final int CUTOFF = 5;
+    static final int CUTOFF = 10;
 
     public static void main(String[] args) {
         String samplesPath = "output/samples.txt";
         String prunedSamplesPath = "output/prunedsamples/" + new SimpleDateFormat("MM.dd.hh.mm").format(new Date()) + "/";
         new File(prunedSamplesPath).mkdir();
+        int samplesConsideredInExpectedValue = 0;
 //        List<double[][]> prunedRewardSets = new ArrayList<>();
 //        List<Double> logWeights = new ArrayList<>();
 
@@ -101,6 +102,7 @@ public class NewSamplesProcessor {
                 if (Utilities.isValidDouble(sample[lwPos])) {
                     double currLW = Double.parseDouble(sample[lwPos]);
                     if (maxLW - currLW < CUTOFF) {
+                        samplesConsideredInExpectedValue++;
                         double currWeight = Math.exp(currLW-lse);
                         /*Expected cI calculation*/
                         int cursor = 2;
@@ -146,6 +148,8 @@ public class NewSamplesProcessor {
         for (int m = 0; m < NTASKS; m++) {
             System.out.print(expectedCI[m] + "\t");
         }
+        
+        System.out.println("\nSamples Considered = "+samplesConsideredInExpectedValue);
 
     }
 
