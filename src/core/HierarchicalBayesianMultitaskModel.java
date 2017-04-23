@@ -15,6 +15,7 @@ import stats.BiasedRewardPrior;
 import stats.DirichletDistribution;
 import stats.Distribution;
 import stats.ExponentialDistribution;
+import stats.ProductDirichletDistribution;
 
 /**
  *
@@ -52,7 +53,8 @@ public class HierarchicalBayesianMultitaskModel {
         for (int i = 0; i < alpha.length; i++) {
             alpha[i] = rewardHyperprior.getSample();
         }
-        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
+//        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
+        ProductDirichletDistribution rewardPrior = new ProductDirichletDistribution(alpha, mdp.getnStates(), mdp.getnActions());
         
         //sample biased reward prior parameter
         //double alpha[] = new double[]{rewardHyperprior.getSample() + 1};
