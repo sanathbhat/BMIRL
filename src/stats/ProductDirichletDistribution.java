@@ -14,9 +14,10 @@ import org.apache.commons.math3.distribution.GammaDistribution;
 public class ProductDirichletDistribution extends Distribution<double[]> {
 
     /**
-     * The set of alpha vectors for this product Dirichlet distribution
+     * The set of alpha vectors for this product Dirichlet distribution placed one after the other in a 1-D array
      */
-    private final double alphaVectors[][];
+//    private final double alphaVectors[][];
+    private final double alphaVectors[];
     /**
      * No of Dirichlet distribution components in the product
      */
@@ -29,28 +30,30 @@ public class ProductDirichletDistribution extends Distribution<double[]> {
     public ProductDirichletDistribution(double[] alphaVectors, int n, int k) {
         this.n = n;
         this.k = k;
-        this.alphaVectors = new double[n][k];
-        for (int i = 0; i < n; i++) {
-            System.arraycopy(alphaVectors, i*k, this.alphaVectors[i], 0, k);
-        }
+//        this.alphaVectors = new double[n][k];
+        this.alphaVectors = alphaVectors;
+//        for (int i = 0; i < n; i++) {
+//            System.arraycopy(alphaVectors, i*k, this.alphaVectors[i], 0, k);
+//        }
     }
 
     @Override
     public double[] getSample() {
-        double x[] = new double[n*k];
+        double x[] = new double[alphaVectors.length];
         for (int i = 0; i < n; i++) {
             double y[] = new double[k];
             double ySum = 0;
             for (int j = 0; j < k; j++) {
-                y[j] = new GammaDistribution(alphaVectors[i][j], 1).sample();
+                y[j] = new GammaDistribution(alphaVectors[i*k+j], 1).sample();
                 ySum += y[j];
             }
 
-            double xTemp[] = new double[k];
+//            double xTemp[] = new double[k];
             for (int j = 0; j < k; j++) {
-                xTemp[j] = y[j] / ySum;
+//                xTemp[j] = y[j] / ySum;
+                x[i*k+j] = y[j] / ySum;
             }
-            System.arraycopy(xTemp, 0, x, i*k, k);
+//            System.arraycopy(xTemp, 0, x, i*k, k);
         }
         return x;
     }
