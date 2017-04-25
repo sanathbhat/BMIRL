@@ -22,12 +22,11 @@ import stats.ProductDirichletDistribution;
  * @author sbhat
  */
 public class HierarchicalBayesianMultitaskModel {
-    
+
     private final Distribution<Double> rewardHyperprior;
     private final Distribution<Double> softmaxHyperprior;
     private final int m;  //number of tasks
     private final MDP mdp;
-    
 
     /**
      *
@@ -47,19 +46,27 @@ public class HierarchicalBayesianMultitaskModel {
         //sample beta i.e. the parameter of the Exponential softmax prior over the policy's c parameter
         double beta = softmaxHyperprior.getSample();    //c prior parameter
         ExponentialDistribution exponentialCPrior = new ExponentialDistribution(beta);
-        
+
         //sample alphaVector i.e. the parameter set for the Dirichlet reward prior
-        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
+//        double[] alpha = new double[mdp.getnStates()*mdp.getnActions()];    //reward prior parameters
+//        for (int i = 0; i < alpha.length; i++) {
+//            alpha[i] = rewardHyperprior.getSample();
+//        }
+        //one alpha parameter per state! Same value is duplicated |A| times 
+        double[] alphaVector = new double[mdp.getnStates() * mdp.getnActions()];    //reward prior parameters
+        double alpha[] = new double[mdp.getnStates()];
         for (int i = 0; i < alpha.length; i++) {
             alpha[i] = rewardHyperprior.getSample();
         }
+        for (int i = 0; i < alphaVector.length; i++) {
+            alphaVector[i] = alpha[i / mdp.getnActions()];
+        }
 //        DirichletDistribution rewardPrior = new DirichletDistribution(alpha);
-        ProductDirichletDistribution rewardPrior = new ProductDirichletDistribution(alpha, mdp.getnStates(), mdp.getnActions());
-        
+        ProductDirichletDistribution rewardPrior = new ProductDirichletDistribution(alphaVector, mdp.getnStates(), mdp.getnActions());
+
         //sample biased reward prior parameter
         //double alpha[] = new double[]{rewardHyperprior.getSample() + 1};
         //BiasedRewardPrior rewardPrior = new BiasedRewardPrior(mdp.getnStates(), mdp.getnActions(), alpha[0], 11, 3.3);
-        
         WeightedSample wrs = new WeightedSample();
         wrs.setBeta(beta);
         wrs.setAlpha(alpha);
@@ -72,7 +79,7 @@ public class HierarchicalBayesianMultitaskModel {
             //sample a reward function and complete the mdp so that Q values can be calculated
             MDP completeMDP = mdp.setRewardFunction(rewardPrior.getSample());
             completeMDP.normalizeRewardFunction(0.01);
-            
+
             SoftMaxPolicy piI = new SoftMaxPolicy(completeMDP.computeQValues(), cI);
             logWeight += computeLogLikelihood(demonstrations.get(i), piI);
 //            if(Double.isNaN(logWeight))
@@ -86,7 +93,7 @@ public class HierarchicalBayesianMultitaskModel {
 //            System.out.println("Weight="+logWeight);
         return wrs;
     }
-    
+
     private double computeLogLikelihood(TrajectorySet tSet, SoftMaxPolicy policy) {
         double logW = 0;
         for (List<StateActionPair> trajectory : tSet) {
@@ -94,7 +101,7 @@ public class HierarchicalBayesianMultitaskModel {
                 logW += Math.log(policy.pi(sa.getS(), sa.getA()));
             }
         }
-        return logW/tSet.size();
+        return logW / tSet.size();
     }
 
     /**
@@ -103,5 +110,5 @@ public class HierarchicalBayesianMultitaskModel {
     public int getM() {
         return m;
     }
-    
+
 }
