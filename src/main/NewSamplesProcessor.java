@@ -94,6 +94,7 @@ public class NewSamplesProcessor {
         //Pass 3: Compute expected reward
         double expectedRF[][] = new double[NTASKS][NSTATES*NACTIONS];
         double expectedCI[] = new double[NTASKS];
+        double expectedAlpha[] = new double[NSTATES];
         linesRead = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
@@ -104,8 +105,13 @@ public class NewSamplesProcessor {
                     if (maxLW - currLW < CUTOFF) {
                         samplesConsideredInExpectedValue++;
                         double currWeight = Math.exp(currLW-lse);
+                        /*Expected alpha calculation*/
+                        int cursor = 1;
+                        String alpha[] = sample[cursor++].split(",");
+                        for (int s = 0; s < NSTATES; s++) {
+                            expectedAlpha[s] += (currWeight * Double.parseDouble(alpha[s]));
+                        }
                         /*Expected cI calculation*/
-                        int cursor = 2;
 //                        double[] cI = new double[NTASKS];
                         for (int m = 0; m < NTASKS; m++) {
 //                            cI[m] = Double.parseDouble(sample[cursor++]);
@@ -134,7 +140,7 @@ public class NewSamplesProcessor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        writeToFile(prunedSamplesPath, expectedRF, expectedCI, 0);
+        writeToFile(prunedSamplesPath, expectedRF, expectedCI, expectedAlpha, 0);
 //        for (int m = 0; m < NTASKS; m++) {
 //            for (int s = 0; s < NSTATES; s++) {
 //                for (int a = 0; a < NACTIONS; a++) {
@@ -155,7 +161,7 @@ public class NewSamplesProcessor {
 
     
 
-    private static void writeToFile(String prunedSamplesPath, double[][] rewardSet, double[] cParams, double logWeight) {
+    private static void writeToFile(String prunedSamplesPath, double[][] rewardSet, double[] cParams, double alpha[], double logWeight) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(prunedSamplesPath + "newsample.txt", true))) {
             for (double[] reward : rewardSet) {
                 bw.append(formatReward(reward) + "\n");
@@ -164,6 +170,10 @@ public class NewSamplesProcessor {
             bw.append(logWeight + "\n");
             for (int i = 0; i < NTASKS; i++) {
                 bw.append(cParams[i] + "\t");
+            }
+            bw.append("\n\n");
+            for (int i = 0; i < NSTATES; i++) {
+                 bw.append(i + "\t" +alpha[i] + "\n");
             }
 //            bw.append(cParams[0]+ "\t");
 //            bw.append(cParams[1]+ "\t");
