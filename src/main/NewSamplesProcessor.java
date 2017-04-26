@@ -89,6 +89,7 @@ public class NewSamplesProcessor {
         }
         lse = maxLW + Math.log(lse);
         //double Z = Math.exp(lse);
+        System.out.println("MaxLW = "+maxLW);
         System.out.println("LSE ="+lse);
         
         //Pass 3: Compute expected reward

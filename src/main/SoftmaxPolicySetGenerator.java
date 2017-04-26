@@ -63,7 +63,7 @@ public class SoftmaxPolicySetGenerator {
             ex.printStackTrace();
         }
 
-        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.01);
+        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.1);
         //mdp.loadTransitionFunction(trajectoriesPath, true);
         mdp.loadTransitionFunctionFromFile(transitionFnPath);
 
