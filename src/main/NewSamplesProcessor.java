@@ -65,6 +65,7 @@ public class NewSamplesProcessor {
         //HashMap<Double, RewardsCParamsSet> prunedRewardsDistribution = new HashMap<>();
         //List<Map.Entry<Double, RewardsCParamsSet>> prunedRewardsDistributionList = new ArrayList<>();
         double lse = 0;
+        double tlse = 0;
         linesRead = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
@@ -75,6 +76,7 @@ public class NewSamplesProcessor {
                     if (maxLW - currLW < CUTOFF) {
                         lse += Math.exp(currLW - maxLW);
                     }
+                    tlse += Math.exp(currLW - maxLW);
                 }
 
                 linesRead++;
@@ -88,6 +90,7 @@ public class NewSamplesProcessor {
             e.printStackTrace();
         }
         lse = maxLW + Math.log(lse);
+        tlse = maxLW + Math.log(tlse);
         //double Z = Math.exp(lse);
         System.out.println("MaxLW = "+maxLW);
         System.out.println("LSE ="+lse);
@@ -159,7 +162,7 @@ public class NewSamplesProcessor {
 //        }
         
         System.out.println("\nSamples Considered = "+samplesConsideredInExpectedValue);
-
+        System.out.println("Total weight accorded by used samples = " + Math.exp(lse-tlse));
     }
 
     
