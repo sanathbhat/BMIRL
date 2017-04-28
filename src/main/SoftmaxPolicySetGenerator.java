@@ -25,7 +25,7 @@ public class SoftmaxPolicySetGenerator {
     static final int NTASKS = 3;
 
     public static void main(String[] args) {
-        String rewardSetFilePath = "output/prunedsamples/er.txt";// + args[0];
+        String rewardSetFilePath = "output/prunedsamples/newsample.txt";// + args[0];
         String trajectoriesPath = "data/trajectories";
         String transitionFnPath = "data/transFn2Features";
         double[] trajectoryBoundaries = new double[]{440, 840, 1200};

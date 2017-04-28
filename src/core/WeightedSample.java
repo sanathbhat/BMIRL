@@ -118,7 +118,7 @@ public class WeightedSample {
     /**
      * @param alpha the alpha to set
      */
-    public void setAlpha(double[] alpha) {
+    public void setAlpha(double... alpha) {
         this.alpha = new double[alpha.length];
         System.arraycopy(alpha, 0, this.alpha, 0, alpha.length);
     }

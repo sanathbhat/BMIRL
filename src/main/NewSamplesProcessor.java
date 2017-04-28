@@ -23,7 +23,7 @@ public class NewSamplesProcessor {
     static final int NSTATES = 154;
     static final int NACTIONS = 7;
     static final int NTASKS = 3;
-    static final int CUTOFF = 2;
+    static final double CUTOFF = 2;
 
     public static void main(String[] args) {
         String samplesPath = "output/samples.txt";
@@ -95,7 +95,9 @@ public class NewSamplesProcessor {
         //Pass 3: Compute expected reward
         double expectedRF[][] = new double[NTASKS][NSTATES*NACTIONS];
         double expectedCI[] = new double[NTASKS];
-        double expectedAlpha[] = new double[NSTATES];
+        double expectedAlpha[] = new double[NSTATES];     //type 2
+//        double expectedAlpha[] = new double[1];           //type 3
+//        double expectedAlpha[] = new double[NSTATES/11];    //type 4
         linesRead = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(samplesPath))) {
             String line;
@@ -109,8 +111,8 @@ public class NewSamplesProcessor {
                         /*Expected alpha calculation*/
                         int cursor = 1;
                         String alpha[] = sample[cursor++].split(",");
-                        for (int s = 0; s < NSTATES; s++) {
-                            expectedAlpha[s] += (currWeight * Double.parseDouble(alpha[s]));
+                        for (int i = 0; i < alpha.length; i++) {
+                            expectedAlpha[i] += (currWeight * Double.parseDouble(alpha[i]));
                         }
                         /*Expected cI calculation*/
 //                        double[] cI = new double[NTASKS];
@@ -173,7 +175,7 @@ public class NewSamplesProcessor {
                 bw.append(cParams[i] + "\t");
             }
             bw.append("\n\n");
-            for (int i = 0; i < NSTATES; i++) {
+            for (int i = 0; i < alpha.length; i++) {
                  bw.append(i + "\t" +alpha[i] + "\n");
             }
 //            bw.append(cParams[0]+ "\t");
