@@ -33,7 +33,7 @@ public class BMIRLMain {
 //        int nSamples = 10000000;    //10M!
         //int nSamples = 100000000;    //100M!
         int nSamples  = Integer.parseInt(args[0]);
-        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.01);        
+        CarAMDP mdp = new CarAMDP(154, 7, 0.99, 0.1);        
         //mdp.loadTransitionFunction(trajectoriesPath, true);
         mdp.loadTransitionFunctionFromFile(transitionFunctionPath);
         //mdp.displayTransitionFunction();
