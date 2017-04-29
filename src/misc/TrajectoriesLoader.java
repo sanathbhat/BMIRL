@@ -62,7 +62,7 @@ public class TrajectoriesLoader {
                             if(m==trajectoryBoundaries.length)      //trajectories from m tasks have been read
                                 break main;
                         }
-                        if(currentTaskSAPairNo%10==0)         //load every 10th (s,a) pair
+//                        if(currentTaskSAPairNo%10==0)         //load every 10th (s,a) pair
                             currentTrajectory.add(new StateActionPair(s, a));   
                         
                         currentTaskSAPairNo++;
